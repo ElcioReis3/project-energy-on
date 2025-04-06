@@ -23,10 +23,12 @@ import api from "@/services/api";
 const formSchema = z.object({
   name: z.string(),
   address: z.string(),
-  meter: z.string(),
   privy: z.string(),
   email: z.string().email(),
-  contact: z.string(),
+  contact: z.string().optional(),
+  meter: z.string(),
+  count_meter: z.number().min(7),
+  birth: z.string(),
 });
 
 export const RegisterClient = () => {
@@ -35,8 +37,10 @@ export const RegisterClient = () => {
     defaultValues: {
       name: "",
       address: "",
-      meter: "",
       privy: "000.000.000-00",
+      meter: "",
+      birth: "",
+      count_meter: 0,
       contact: "",
     },
   });
@@ -46,17 +50,19 @@ export const RegisterClient = () => {
 
       formData.append("name", values.name);
       formData.append("address", values.address);
-      formData.append("meter", values.meter);
       formData.append("privy", String(values.privy));
       formData.append("email", String(values.email));
       formData.append("contact", String(values.contact));
+      formData.append("meter", values.meter);
+      formData.append("count_meter", String(values.count_meter));
+      formData.append("birth", String(values.birth));
 
       const response = await api.post("/adm/add-client", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
+      console.log(response.data);
       window.location.reload();
     } catch (error: any) {
       alert(
@@ -101,18 +107,6 @@ export const RegisterClient = () => {
             />
             <FormField
               control={form.control}
-              name="meter"
-              render={({ field }) => (
-                <FormItem className="flex items-center">
-                  <FormLabel className="px-3">Número do medidor</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Número do medidor" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="contact"
               render={({ field }) => (
                 <FormItem className="flex items-center">
@@ -131,6 +125,42 @@ export const RegisterClient = () => {
                   <FormLabel className="px-3">CPF ou CNPJ</FormLabel>
                   <FormControl>
                     <Input placeholder="CPF ou CNPJ" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="birth"
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="px-3">Data de Nascimento</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Data de Nascimento" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="meter"
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="px-3">Série do medidor</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Número série do medidor" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="count_meter"
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="px-3">Kwh</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Kwh atual" {...field} />
                   </FormControl>
                 </FormItem>
               )}

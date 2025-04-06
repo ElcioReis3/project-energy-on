@@ -36,7 +36,7 @@ export const TableAdm = () => {
             <TableHead className="max-w-24">Data</TableHead>
             <TableHead>Número do medidor</TableHead>
             <TableHead>Cliente</TableHead>
-            <TableHead className="text-right">QR Code</TableHead>
+            <TableHead className="text-right">Dados</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="w-full"></TableBody>
