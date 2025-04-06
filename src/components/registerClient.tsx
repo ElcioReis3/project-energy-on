@@ -21,8 +21,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/services/api";
 
 const formSchema = z.object({
-  name: z.string(),
-  address: z.string(),
+  name: z.string().min(3, "Nome é obrigatório"),
+  address: z.string().min(3, "Endereço é obrigatório"),
   privy: z.string(),
   email: z.string().email(),
   contact: z.string().optional(),
@@ -119,6 +119,18 @@ export const RegisterClient = () => {
             />
             <FormField
               control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="flex items-center">
+                  <FormLabel className="px-3">E-mail</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E-mail" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="privy"
               render={({ field }) => (
                 <FormItem className="flex items-center">
@@ -136,7 +148,11 @@ export const RegisterClient = () => {
                 <FormItem className="flex items-center">
                   <FormLabel className="px-3">Data de Nascimento</FormLabel>
                   <FormControl>
-                    <Input placeholder="Data de Nascimento" {...field} />
+                    <Input
+                      type="date"
+                      placeholder="Data de Nascimento"
+                      {...field}
+                    />
                   </FormControl>
                 </FormItem>
               )}
@@ -160,7 +176,7 @@ export const RegisterClient = () => {
                 <FormItem className="flex items-center">
                   <FormLabel className="px-3">Kwh</FormLabel>
                   <FormControl>
-                    <Input placeholder="Kwh atual" {...field} />
+                    <Input type="number" placeholder="Kwh atual" {...field} />
                   </FormControl>
                 </FormItem>
               )}
