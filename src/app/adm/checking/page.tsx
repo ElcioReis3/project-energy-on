@@ -7,6 +7,7 @@ import { SkeletonAdm } from "@/components/skeletons/skeletonAdm";
 import { useEffect } from "react";
 import { RegisterClient } from "@/components/registerClient";
 import { Button } from "@/components/ui/button";
+import { ReadingDialog } from "@/components/Dialogs/ReadingDialog";
 
 export default function CheckingPage() {
   const { data: session, status } = useSession();
@@ -28,7 +29,9 @@ export default function CheckingPage() {
       </div>
       <div className="max-w-3xl min-h-96 m-auto">
         <div className="flex gap-3">
-          <Button>Ler Medidor</Button>
+          <ReadingDialog>
+            <Button>Ler Medidor</Button>
+          </ReadingDialog>
           <RegisterClient />
         </div>
         <div className="flex flex-col border my-11 p-3 rounded-md">
