@@ -1,3 +1,4 @@
+// components/ReadingDialog.tsx
 "use client";
 import {
   Dialog,
@@ -7,81 +8,107 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import api from "@/services/api";
+import { useClientStore } from "@/stores/useClientStore";
+import { userType } from "@/types/userType";
+import { ManualReadingForm } from "../ManualReadingForm";
+import { useToast } from "@/hooks/use-toast";
 
 export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
-  const [prevCount, setPrevCount] = useState<number>(0);
-  const [userName, setUserName] = useState<string>("");
-  const [numberMeter, setNumberMeter] = useState<string>("");
+  const [numberMeter, setNumberMeter] = useState("");
   const [dataAtual, setDataAtual] = useState("");
-  const [vencimento, setVencimento] = useState("");
+  const [valorKwh, setValorKwh] = useState("");
+  const [total, setTotal] = useState<number | null>(null);
+  const { client, setClient } = useClientStore((state) => state);
+  const [maturityDate, setMaturityDate] = useState(new Date());
+  const { toast } = useToast();
 
-  const handleClient = async (series: string) => {
-    console.log(series);
+  const handleClient = async () => {
     try {
-      const response = await api.get(`/get-client?serie=${series}`);
+      const response = await api.get(`/get-client/?meter=${numberMeter}`);
+      const clientData = response.data as userType;
+      setClient(clientData);
     } catch (error) {
       alert("Número de série do medidor não encontrado");
     }
   };
 
+  const gerarCobranca = () => {
+    const leituraAtual = parseInt(valorKwh);
+    const leituraAnterior = client?.count_meter ?? 0;
+    const valorUnitario = 0.75;
+
+    if (isNaN(leituraAtual) || leituraAtual < leituraAnterior) {
+      alert("Verifique a leitura atual inserida.");
+      return;
+    }
+
+    const consumo = leituraAtual - leituraAnterior;
+    const valorTotal = consumo * valorUnitario;
+    setTotal(valorTotal);
+  };
+
   useEffect(() => {
     const hoje = new Date();
-    const dataVencimento = new Date();
+    const vencimento = new Date(hoje);
+    vencimento.setDate(vencimento.getDate() + 7);
 
-    dataVencimento.setDate(hoje.getDate() + 7);
-    const vencimentoFormatado = dataVencimento.toISOString().split("T")[0];
-    const dataFormatada = hoje.toISOString().split("T")[0];
-
-    setVencimento(vencimentoFormatado);
-    setDataAtual(dataFormatada);
+    setDataAtual(hoje.toISOString().split("T")[0]);
+    setMaturityDate(vencimento);
   }, []);
+
+  const handleCobrance = async () => {
+    gerarCobranca();
+    if (!client || !valorKwh || total === null) {
+      alert("Preencha os dados corretamente.");
+      return;
+    }
+
+    try {
+      const data = {
+        name: client.name,
+        count_meter: parseInt(valorKwh),
+        meter: client.meter,
+        currentDate: new Date(),
+        maturityDate: maturityDate,
+        price: Number(total?.toFixed(2)),
+      };
+
+      await api.post("/create-cobrance", data);
+      toast({ title: "Cobrança criada com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao criar cobrança", error);
+      alert("Erro ao criar cobrança.");
+    }
+  };
 
   return (
     <Dialog>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Leitura do medidor</DialogTitle>
           <DialogDescription>
-            {" "}
             Leia através da câmera ou digite os dados manualmente.
           </DialogDescription>
         </DialogHeader>
         <div>
           <Button>Abrir câmera</Button>
         </div>
-        <div>
-          <div>Leitura manual</div>
-          <div className="flex flex-col gap-2">
-            <Input type="number" placeholder="leitura Kwh" />
-            <Input
-              type="date"
-              placeholder="data"
-              value={dataAtual}
-              onChange={(e) => setDataAtual(e.target.value)}
-            />
-            <Input
-              type="text"
-              placeholder="número série do medidor"
-              value={numberMeter}
-              onChange={(e) => setNumberMeter(e.target.value)}
-            />
-            {userName && (
-              <>
-                <Input type="text" placeholder="Cliente" value={userName} />
-                <div>Leitura anterior: {prevCount}</div>
-                <Button>Gerar dados de cobrança</Button>
-              </>
-            )}
-            {numberMeter.length > 2 && (
-              <Button onClick={() => handleClient(numberMeter)}>Buscar</Button>
-            )}
-          </div>
-        </div>
+        <ManualReadingForm
+          valorKwh={valorKwh}
+          setValorKwh={setValorKwh}
+          dataAtual={dataAtual}
+          setDataAtual={setDataAtual}
+          numberMeter={numberMeter}
+          setNumberMeter={setNumberMeter}
+          onBuscar={handleClient}
+          handlecobrance={handleCobrance}
+          venciment={maturityDate}
+          total={total}
+        />
       </DialogContent>
     </Dialog>
   );

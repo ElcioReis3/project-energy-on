@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import LayoutClient from "./layoutClient";
 
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body>
         <LayoutClient>{children}</LayoutClient>
+        <Toaster />
       </body>
     </html>
   );

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { userType } from "@/types/userType";
-import EditModal from "./formModal";
+import EditModal from "../formModal";
 
 export const TableAdm = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);

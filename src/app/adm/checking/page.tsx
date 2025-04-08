@@ -1,13 +1,12 @@
 "use client";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { TableAdm } from "@/components/tableAdm";
-import { LogOut } from "lucide-react";
 import { SkeletonAdm } from "@/components/skeletons/skeletonAdm";
 import { useEffect } from "react";
 import { RegisterClient } from "@/components/registerClient";
 import { Button } from "@/components/ui/button";
 import { ReadingDialog } from "@/components/Dialogs/ReadingDialog";
+import { TableAdm } from "@/components/Tables/tableAdm";
 
 export default function CheckingPage() {
   const { data: session, status } = useSession();

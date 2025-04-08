@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { ConsultDialog } from "./Dialogs/ConsultDialog";
 
 export const Header = () => {
   return (
@@ -16,7 +17,11 @@ export const Header = () => {
             alt="logomarca"
           />
         </Link>
-        <Button className="absolute bottom-3 right-3">Consultar</Button>
+        <ConsultDialog>
+          <span className="absolute bottom-3 right-3">
+            <Button>Consultar</Button>
+          </span>
+        </ConsultDialog>
       </div>
       <Separator />
     </header>

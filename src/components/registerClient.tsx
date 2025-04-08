@@ -19,6 +19,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import api from "@/services/api";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(3, "Nome é obrigatório"),
@@ -27,11 +28,12 @@ const formSchema = z.object({
   email: z.string().email(),
   contact: z.string().optional(),
   meter: z.string(),
-  count_meter: z.number().min(7),
+  count_meter: z.number(),
   birth: z.string(),
 });
 
 export const RegisterClient = () => {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,29 +48,16 @@ export const RegisterClient = () => {
   });
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const formData = new FormData();
-
-      formData.append("name", values.name);
-      formData.append("address", values.address);
-      formData.append("privy", String(values.privy));
-      formData.append("email", String(values.email));
-      formData.append("contact", String(values.contact));
-      formData.append("meter", values.meter);
-      formData.append("count_meter", String(values.count_meter));
-      formData.append("birth", String(values.birth));
-
-      const response = await api.post("/adm/add-client", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      await api.post("/adm/add-client", values);
+      toast({
+        title: "Cliente cadastrado com sucesso!",
+        className: "bg-green-300",
       });
-      console.log(response.data);
-      window.location.reload();
     } catch (error: any) {
-      alert(
-        error.response?.data?.message ||
-          "Ocorreu um erro ao enviar os dados. Tente novamente"
-      );
+      toast({
+        title: "Erro ao cadastradar cliente!",
+        className: "bg-red-300",
+      });
     }
   }
 
@@ -176,7 +165,13 @@ export const RegisterClient = () => {
                 <FormItem className="flex items-center">
                   <FormLabel className="px-3">Kwh</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="Kwh atual" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="Kwh atual"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      maxLength={6}
+                    />
                   </FormControl>
                 </FormItem>
               )}

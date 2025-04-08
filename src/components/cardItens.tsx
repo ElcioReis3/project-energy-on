@@ -1,27 +1,44 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "./ui/card";
-import { userType } from "@/types/userType";
+"use client";
+import { useConsultStore } from "@/stores/useConsultStore";
+import { Card, CardContent, CardDescription, CardTitle } from "./ui/card";
+import { Separator } from "./ui/separator";
+import { TableConsult } from "./Tables/TableConsult";
 
-type Props = {
-  item: userType;
-};
+export const CardItens = () => {
+  const { clientConsult } = useConsultStore((state) => state);
 
-export const CardGrid = ({ item }: Props) => {
-  const { name, address, contact, email, privy } = item;
   return (
-    <Card className="py-3 space-y-3 max-w-80">
-      <CardTitle className="text-lg">{name}</CardTitle>
-
-      <CardContent className="h-32"></CardContent>
-      <CardDescription className="px-3 min-h-10">{address}</CardDescription>
-      <CardFooter className="w-full flex justify-center py-3">
-        {contact}
-      </CardFooter>
-    </Card>
+    <div className="w-full">
+      {clientConsult && (
+        <>
+          <div className="w-max p-7">
+            <div className="font-semibold">Olá {clientConsult.name}</div>
+            <div className="text-muted-foreground">
+              Essa agência é para você.
+            </div>
+            <Separator />
+            <div className="border p-2 rounded-md mt-2 bg-gray-300">
+              Medidor: {clientConsult?.meter}
+            </div>
+          </div>
+          <Card className="border my-7 mx-7">
+            {clientConsult && (
+              <>
+                <CardTitle className="text-lg text-center p-3">
+                  Selecione a Fatura
+                </CardTitle>
+                <CardDescription className="w-96 px-3 m-auto">
+                  Por aqui você faz uma busca por débitos e emite a segunda via
+                  gratuita das suas contas.
+                </CardDescription>
+                <CardContent className="h-32">
+                  <TableConsult />
+                </CardContent>
+              </>
+            )}
+          </Card>
+        </>
+      )}
+    </div>
   );
 };

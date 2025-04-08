@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import { CardGrid } from "./cardItens";
 import { Button } from "./ui/button";
 
 import {
@@ -19,13 +17,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import { userType } from "@/types/userType";
+import { useConsultStore } from "@/stores/useConsultStore";
+import { CardItens } from "./cardItens";
+import React from "react";
 
-type Props = {
-  item: userType;
-};
-export const DrawerCard = ({ item }: Props) => {
-  const { name, address, email, contact, privy } = item;
+export const DrawerCard = ({ children }: { children: React.ReactNode }) => {
+  const { clientConsult } = useConsultStore((state) => state);
 
   const handleAddButton = () => {
     const phoneNumber = "5599912341234";
@@ -38,16 +35,13 @@ export const DrawerCard = ({ item }: Props) => {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        {" "}
-        <CardGrid item={item} />
-      </DialogTrigger>
+      <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{name}</DialogTitle>
+          <DialogTitle>{clientConsult?.name}</DialogTitle>
           <DialogDescription className="flex flex-col">
-            <span>{address}</span>
-            <span>{contact}</span>
+            <span>{clientConsult?.address}</span>
+            <span>{clientConsult?.contact}</span>
           </DialogDescription>
         </DialogHeader>
         <Carousel>
@@ -55,7 +49,7 @@ export const DrawerCard = ({ item }: Props) => {
           <CarouselPrevious className="disabled:opacity-0 cursor-default" />
           <CarouselNext className="disabled:opacity-0 cursor-default" />
         </Carousel>
-        <Button onClick={() => handleAddButton()}>Tenho Interesse</Button>
+        <Button onClick={() => handleAddButton()}>Gerar</Button>
       </DialogContent>
     </Dialog>
   );
