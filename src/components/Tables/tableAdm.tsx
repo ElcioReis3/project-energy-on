@@ -1,64 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { userType } from "@/types/userType";
-import EditModal from "../formModal";
+import { useCobranceStore } from "@/stores/useCobranceStore";
+import api from "@/services/api";
+import { formatDateTimeBR } from "@/services/formatDate";
+import { QrCodeModal } from "../Hover/QrCodeModal";
 
 export const TableAdm = () => {
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [selectedCar, setSelectedCar] = useState<Partial<userType>>({});
+  const { cobrances, setCobrances } = useCobranceStore();
 
-  const handleEditClick = (user: userType) => {
-    setSelectedCar(user);
-    setEditModalOpen(true);
-  };
+  useEffect(() => {
+    const fetchCobrancas = async () => {
+      const response = await api.get("/consult-meter");
+      setCobrances(response.data.cobrances);
+    };
 
-  const handleEdit = (id: string, updatedData: Partial<userType>) => {
-    const formData = new FormData();
-    formData.append("name", updatedData.name || "");
-    formData.append("endereço", updatedData.address || "");
-    formData.append("medidor", String(updatedData.meter || ""));
-    formData.append("CPF ou CNPJ", updatedData.privy || "");
-    formData.append("email", updatedData.email || "");
-    formData.append("telefone", updatedData.contact || "");
-  };
+    fetchCobrancas();
+  }, [setCobrances]);
 
   return (
     <>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="bg-orange-200 hover:bg-orange-300">
             <TableHead className="max-w-24">Data</TableHead>
             <TableHead>Número do medidor</TableHead>
             <TableHead>Cliente</TableHead>
-            <TableHead className="text-right">Dados</TableHead>
+            <TableHead>QR Code</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="w-full"></TableBody>
-      </Table>
+        <TableBody className="w-full">
+          {cobrances.map((cobranca) => (
+            <TableRow
+              key={cobranca.id}
+              className="bg-orange-50 hover:bg-orange-100"
+            >
+              <TableCell>{formatDateTimeBR(cobranca.currentDate)}</TableCell>
 
-      {isEditModalOpen && (
-        <EditModal
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setEditModalOpen(false);
-            setSelectedCar({});
-          }}
-          initialData={selectedCar}
-          onSave={(updatedData) => {
-            if (selectedCar.id) {
-              handleEdit(selectedCar.id, updatedData);
-            }
-            setEditModalOpen(false);
-            setSelectedCar({});
-          }}
-        />
-      )}
+              <TableCell>{cobranca.meter}</TableCell>
+              <TableCell>{cobranca.name}</TableCell>
+              <TableCell>
+                <QrCodeModal data={cobranca} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 };

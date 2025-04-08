@@ -15,6 +15,7 @@ import { useClientStore } from "@/stores/useClientStore";
 import { userType } from "@/types/userType";
 import { ManualReadingForm } from "../ManualReadingForm";
 import { useToast } from "@/hooks/use-toast";
+import { CameraReader } from "../CameraReader";
 
 export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [numberMeter, setNumberMeter] = useState("");
@@ -23,6 +24,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [total, setTotal] = useState<number | null>(null);
   const { client, setClient } = useClientStore((state) => state);
   const [maturityDate, setMaturityDate] = useState(new Date());
+  const [ultimaCobranca, setUltimaCobranca] = useState<Date | null>(null);
   const { toast } = useToast();
 
   const handleClient = async () => {
@@ -30,6 +32,18 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
       const response = await api.get(`/get-client/?meter=${numberMeter}`);
       const clientData = response.data as userType;
       setClient(clientData);
+
+      // Buscar a cobrança mais recente
+      const cobrancaRes = await api.get("/consult-meter", {
+        params: { meter: clientData.meter },
+      });
+
+      const cobrancas = cobrancaRes.data.cobrances;
+      if (cobrancas.length > 0) {
+        setUltimaCobranca(new Date(cobrancas[0].currentDate));
+      } else {
+        setUltimaCobranca(null);
+      }
     } catch (error) {
       alert("Número de série do medidor não encontrado");
     }
@@ -62,8 +76,20 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const handleCobrance = async () => {
     gerarCobranca();
     if (!client || !valorKwh || total === null) {
-      alert("Preencha os dados corretamente.");
+      toast({ title: "Preencha os dados corretamente." });
       return;
+    }
+
+    if (ultimaCobranca) {
+      const dataSelecionada = new Date(dataAtual);
+      const mesmaData =
+        dataSelecionada.getMonth() === ultimaCobranca.getMonth() &&
+        dataSelecionada.getFullYear() === ultimaCobranca.getFullYear();
+
+      if (mesmaData) {
+        toast({ title: "Já existe uma cobrança para este mês." });
+        return;
+      }
     }
 
     try {
@@ -71,9 +97,10 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         name: client.name,
         count_meter: parseInt(valorKwh),
         meter: client.meter,
-        currentDate: new Date(),
+        currentDate: new Date(dataAtual),
         maturityDate: maturityDate,
         price: Number(total?.toFixed(2)),
+        status: "ABERTO",
       };
 
       await api.post("/create-cobrance", data);
@@ -95,7 +122,11 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
           </DialogDescription>
         </DialogHeader>
         <div>
-          <Button>Abrir câmera</Button>
+          <CameraReader
+            onResult={({ serial }) => {
+              setNumberMeter(serial);
+            }}
+          />
         </div>
         <ManualReadingForm
           valorKwh={valorKwh}

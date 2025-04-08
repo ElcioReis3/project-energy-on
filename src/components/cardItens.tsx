@@ -31,7 +31,7 @@ export const CardItens = () => {
                   Por aqui você faz uma busca por débitos e emite a segunda via
                   gratuita das suas contas.
                 </CardDescription>
-                <CardContent className="h-32">
+                <CardContent className="my-7">
                   <TableConsult />
                 </CardContent>
               </>

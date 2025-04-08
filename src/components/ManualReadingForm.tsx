@@ -25,8 +25,6 @@ export const ManualReadingForm = ({
   setNumberMeter,
   onBuscar,
   handlecobrance,
-  venciment,
-  total,
 }: ManualReadingFormProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -53,12 +51,7 @@ export const ManualReadingForm = ({
         onChange={(e) => setNumberMeter(e.target.value)}
       />
 
-      <InforClientDialog
-        kwh={valorKwh}
-        total={total}
-        venciment={venciment}
-        onGerarCobranca={handlecobrance}
-      >
+      <InforClientDialog kwh={valorKwh} onGerarCobranca={handlecobrance}>
         {valorKwh.length > 5 && numberMeter.length > 2 && (
           <Button className="w-full" onClick={onBuscar}>
             Buscar

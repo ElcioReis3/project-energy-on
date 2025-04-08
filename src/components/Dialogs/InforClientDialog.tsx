@@ -14,15 +14,11 @@ import { maskPrivy } from "@/services/maskPrivy";
 type InforClientDialogProps = {
   onGerarCobranca?: () => void;
   kwh: string;
-  venciment?: Date;
-  total?: number | null;
   children: React.ReactNode;
 };
 
 export const InforClientDialog = ({
   children,
-  venciment,
-  total,
   kwh,
   onGerarCobranca,
 }: InforClientDialogProps) => {
@@ -60,6 +56,7 @@ export const InforClientDialog = ({
               <div>Leitura anterior: {client.count_meter}</div>
               <div>Leitura atual: {kwh}</div>
             </div>
+
             <Button onClick={onGerarCobranca}>Gerar e salvar cobrança</Button>
           </div>
         )}
