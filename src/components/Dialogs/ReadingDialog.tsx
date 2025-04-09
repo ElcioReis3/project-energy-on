@@ -30,7 +30,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const handleClient = async () => {
     try {
       const response = await api.get(`/get-client/?meter=${numberMeter}`);
-      const clientData = response.data as userType;
+      const clientData = response.data.client as userType;
       setClient(clientData);
 
       // Buscar a cobrança mais recente

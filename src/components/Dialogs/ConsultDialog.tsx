@@ -22,8 +22,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "@/services/api";
 import { useConsultStore } from "@/stores/useConsultStore";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
-// Schema Zod com validação para CPF ou CNPJ
 const consultSchema = z.object({
   privy: z.string().refine(
     (val) => {
@@ -39,6 +40,8 @@ type ConsultFormType = z.infer<typeof consultSchema>;
 
 export const ConsultDialog = ({ children }: { children: React.ReactNode }) => {
   const { setClientConsult } = useConsultStore((state) => state);
+  const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<ConsultFormType>({
     resolver: zodResolver(consultSchema),
@@ -49,20 +52,32 @@ export const ConsultDialog = ({ children }: { children: React.ReactNode }) => {
   });
 
   const handleSubmit = async (data: ConsultFormType) => {
+    setIsOpen(true);
     const formattedDate = {
       ...data,
       birth: new Date(data.birth).toISOString().replace("Z", "+00:00"),
     };
 
-    const response = await api.get("/consult-client", {
-      params: formattedDate,
-    });
-    setClientConsult(response.data.client);
+    try {
+      const response = await api.get("/consult-client", {
+        params: formattedDate,
+      });
+      setClientConsult(response.data.client);
+      setIsOpen(false);
+    } catch (error) {
+      toast({
+        title: "Dados incorretos",
+        description: "Corrija os dados e tente novamente.",
+        className: "text-red-500",
+      });
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild onClick={() => setIsOpen(true)}>
+        {children}
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Consulte</DialogTitle>

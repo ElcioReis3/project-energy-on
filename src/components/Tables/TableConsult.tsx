@@ -9,25 +9,42 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import api from "@/services/api";
-import { useClientStore } from "@/stores/useClientStore";
 import { useCobranceStore } from "@/stores/useCobranceStore";
 import { useConsultStore } from "@/stores/useConsultStore";
 import { useEffect } from "react";
 import { Button } from "../ui/button";
+import { CobranceType } from "@/types/cobranceType";
+import { useToast } from "@/hooks/use-toast";
 
 export const TableConsult = () => {
   const { cobrances, setCobrances } = useCobranceStore();
   const { clientConsult } = useConsultStore();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchCobrancas = async () => {
-      if (!clientConsult || !clientConsult.meter) return;
-      const response = await api.get("/consult-meter", {
-        params: { meter: clientConsult.meter },
+  const handlePayment = async (cobranca: CobranceType) => {
+    try {
+      const response = await api.post("/payment", {
+        title: cobranca.name ?? "Cobrança",
+        quantity: 1,
+        price: cobranca.price,
+        description: "Pagamento de energia",
       });
-      setCobrances(response.data.cobrances);
-    };
+      const { url } = response.data;
+      window.open(url, "_blank");
+    } catch (error) {
+      console.error("Erro ao iniciar pagamento:", error);
+      toast({ title: "Erro ao iniciar pagamento." });
+    }
+  };
 
+  const fetchCobrancas = async () => {
+    if (!clientConsult || !clientConsult.meter) return;
+    const response = await api.get("/consult-meter", {
+      params: { meter: clientConsult.meter },
+    });
+    setCobrances(response.data.cobrances);
+  };
+  useEffect(() => {
     fetchCobrancas();
   }, [clientConsult, setCobrances]);
 
@@ -47,7 +64,18 @@ export const TableConsult = () => {
         {cobrances.map((cobranca) => (
           <TableRow key={cobranca.id}>
             <TableCell>
-              <Button>Pagar</Button>
+              {cobranca.status === "ABERTO" && (
+                <Button onClick={() => handlePayment(cobranca)}>Pagar</Button>
+              )}
+
+              {cobranca.status === "VENCIDO" && (
+                <Button
+                  variant="destructive"
+                  onClick={() => handlePayment(cobranca)}
+                >
+                  Pagar com multa
+                </Button>
+              )}
             </TableCell>
             <TableCell className="font-medium">
               {new Date(cobranca.currentDate).toLocaleDateString("pt-BR", {
@@ -61,7 +89,11 @@ export const TableConsult = () => {
             </TableCell>
             <TableCell
               className={`text-right font-semibold ${
-                cobranca.status === "ABERTO" ? "text-green-500" : "text-black"
+                cobranca.status === "ABERTO"
+                  ? "text-green-500"
+                  : cobranca.status === "VENCIDO"
+                  ? "text-red-500"
+                  : "text-gray-700"
               }`}
             >
               {cobranca.status}
