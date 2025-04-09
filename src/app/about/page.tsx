@@ -33,7 +33,7 @@ export default function About() {
 
   return (
     <>
-      <Header />
+      <Header visibility={false} />
 
       <div className="w-full max-w-2xl m-auto p-3">
         <div>
