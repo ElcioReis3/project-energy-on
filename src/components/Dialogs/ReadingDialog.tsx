@@ -1,4 +1,3 @@
-// components/ReadingDialog.tsx
 "use client";
 import {
   Dialog,
@@ -8,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useClientStore } from "@/stores/useClientStore";
@@ -25,6 +23,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const { client, setClient } = useClientStore((state) => state);
   const [maturityDate, setMaturityDate] = useState(new Date());
   const [ultimaCobranca, setUltimaCobranca] = useState<Date | null>(null);
+  const [error, setError] = useState("");
   const { toast } = useToast();
 
   const handleClient = async () => {
@@ -45,7 +44,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         setUltimaCobranca(null);
       }
     } catch (error) {
-      alert("Número de série do medidor não encontrado");
+      toast({ title: "Número de série do medidor não encontrado" });
     }
   };
 
@@ -55,7 +54,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
     const valorUnitario = 0.75;
 
     if (isNaN(leituraAtual) || leituraAtual < leituraAnterior) {
-      alert("Verifique a leitura atual inserida.");
+      toast({ title: "Verifique a leitura atual inserida." });
       return;
     }
 
@@ -80,18 +79,6 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    if (ultimaCobranca) {
-      const dataSelecionada = new Date(dataAtual);
-      const mesmaData =
-        dataSelecionada.getMonth() === ultimaCobranca.getMonth() &&
-        dataSelecionada.getFullYear() === ultimaCobranca.getFullYear();
-
-      if (mesmaData) {
-        toast({ title: "Já existe uma cobrança para este mês." });
-        return;
-      }
-    }
-
     try {
       const data = {
         name: client.name,
@@ -102,12 +89,24 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         price: Number(total?.toFixed(2)),
         status: "ABERTO",
       };
+      console.log("Data", data);
 
-      await api.post("/create-cobrance", data);
+      const response = await api.post("/create-cobrance", data);
+      console.log("Resposta", response.data.cobrances);
       toast({ title: "Cobrança criada com sucesso!" });
-    } catch (error) {
-      console.error("Erro ao criar cobrança", error);
-      alert("Erro ao criar cobrança.");
+    } catch (err: any) {
+      if (err.response && err.response.data) {
+        setError(err.response.data.message);
+        toast({
+          title: "Erro ao criar cobrança.",
+          description: `${err.response.data.message}`,
+        });
+      } else {
+        toast({
+          title: "Erro ao criar cobrança.",
+          description: `${error}`,
+        });
+      }
     }
   };
 
