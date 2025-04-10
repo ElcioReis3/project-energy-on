@@ -79,7 +79,7 @@ export const TableConsult = () => {
               )}
             </TableCell>
             <TableCell className="font-medium">
-              {new Date(cobranca.currentDate).toLocaleDateString("pt-BR", {
+              {new Date(cobranca.maturityDate).toLocaleDateString("pt-BR", {
                 month: "long",
                 year: "numeric",
               })}
