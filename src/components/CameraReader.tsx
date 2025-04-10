@@ -14,11 +14,29 @@ export const CameraReader = ({ onResult }: CameraReaderProps) => {
   const [cameraActive, setCameraActive] = useState(false);
 
   const startCamera = async () => {
-    setCameraActive(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
+    try {
+      setCameraActive(true);
+      const constraints = {
+        video: { facingMode: { exact: "environment" } },
+      };
+
+      let stream: MediaStream;
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch {
+        // fallback para frontal
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+    } catch (error) {
+      console.error("Erro ao acessar a câmera:", error);
+      alert("Erro ao acessar a câmera.");
+      setCameraActive(false);
     }
   };
 
