@@ -28,6 +28,7 @@ export const TableConsult = () => {
         quantity: 1,
         price: cobranca.price,
         description: "Pagamento de energia",
+        cobrancaId: cobranca.id,
       });
       const { url } = response.data;
       window.open(url, "_blank");
