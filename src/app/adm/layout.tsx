@@ -10,8 +10,8 @@ type Props = {
   children: ReactNode;
 };
 export const metadata: Metadata = {
-  title: "Sua empresa | ADM",
-  description: "Sistema de anúncio",
+  title: "Energy On",
+  description: "Empresa de gerenciamento de energia.",
 };
 
 const Layout = ({ children }: Props) => {
