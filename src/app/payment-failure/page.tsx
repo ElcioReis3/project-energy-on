@@ -1,5 +1,4 @@
 "use client";
-
 import { Header } from "@/components/header";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,7 +27,7 @@ export default function Page() {
       <Header visibility={false} />
       <div className="w-full h-full flex justify-center items-center text-center flex-col gap-4 text-xl">
         <div>Seu pagamento falhou!</div>
-        <div>Aguarde só um instante... {count}s</div>
+        <div>Tente novamente mais tarde... {count}s</div>
       </div>
     </>
   );
