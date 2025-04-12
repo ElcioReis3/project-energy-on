@@ -8,7 +8,7 @@ export default function Page() {
   useEffect(() => {
     setTimeout(() => {
       router.push("/");
-    }, 7000);
+    }, 30000);
   });
   return (
     <>
