@@ -15,13 +15,18 @@ import { useEffect } from "react";
 import { Button } from "../ui/button";
 import { CobranceType } from "@/types/cobranceType";
 import { useToast } from "@/hooks/use-toast";
+import usePaymentCobranceStore from "@/stores/usePaymentCobrance";
 
 export const TableConsult = () => {
   const { cobrances, setCobrances } = useCobranceStore();
+  const { payment, setPaymentCobrance } = usePaymentCobranceStore();
   const { clientConsult } = useConsultStore();
   const { toast } = useToast();
 
   const handlePayment = async (cobranca: CobranceType) => {
+    if (cobranca) {
+      setPaymentCobrance(cobranca);
+    }
     try {
       const response = await api.post("/payment", {
         title: cobranca.name ?? "Cobrança",
@@ -62,7 +67,7 @@ export const TableConsult = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {cobrances.map((cobranca) => (
+        {cobrances.map((cobranca: CobranceType) => (
           <TableRow key={cobranca.id}>
             <TableCell>
               {cobranca.status === "ABERTO" && (

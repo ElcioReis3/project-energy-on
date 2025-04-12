@@ -7,4 +7,5 @@ export type CobranceType = {
   meter: string;
   price: Number;
   status: "ABERTO" | "PAGO" | "VENCIDO";
+  idCobrance?: string;
 };
