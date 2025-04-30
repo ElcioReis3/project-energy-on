@@ -13,7 +13,7 @@ import { useClientStore } from "@/stores/useClientStore";
 import { userType } from "@/types/userType";
 import { ManualReadingForm } from "../ManualReadingForm";
 import { useToast } from "@/hooks/use-toast";
-import { CameraReader } from "../CameraReader";
+// import { CameraReader } from "../CameraReader";
 
 export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [numberMeter, setNumberMeter] = useState("");
@@ -116,16 +116,14 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Leitura do medidor</DialogTitle>
-          <DialogDescription>
-            Leia através da câmera ou digite os dados manualmente.
-          </DialogDescription>
+          <DialogDescription>Digite os dados manualmente.</DialogDescription>
         </DialogHeader>
         <div>
-          <CameraReader
+          {/* <CameraReader
             onResult={({ serial }) => {
               setNumberMeter(serial);
             }}
-          />
+          /> */}
         </div>
         <ManualReadingForm
           valorKwh={valorKwh}

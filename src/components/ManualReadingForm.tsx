@@ -2,6 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { InforClientDialog } from "./Dialogs/InforClientDialog";
+import { Label } from "./ui/label";
 
 type ManualReadingFormProps = {
   valorKwh: string;
@@ -28,9 +29,9 @@ export const ManualReadingForm = ({
 }: ManualReadingFormProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <div>Leitura manual</div>
-
+      <Label htmlFor="kwh">Leitura manual</Label>
       <Input
+        id="kwh"
         type="text"
         placeholder="leitura Kwh"
         maxLength={6}
@@ -39,12 +40,16 @@ export const ManualReadingForm = ({
         value={valorKwh}
         onChange={(e) => setValorKwh(e.target.value)}
       />
+      <Label htmlFor="dateIn">Data da leitura</Label>
       <Input
+        id="dateIn"
         type="date"
         value={dataAtual}
         onChange={(e) => setDataAtual(e.target.value)}
       />
+      <Label htmlFor="numberIn">Número de série do medidor</Label>
       <Input
+        id="numberIn"
         type="text"
         placeholder="número série do medidor"
         value={numberMeter}

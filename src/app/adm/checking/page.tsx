@@ -32,6 +32,7 @@ export default function CheckingPage() {
             <Button>Ler Medidor</Button>
           </ReadingDialog>
           <RegisterClient />
+          <Button onClick={() => router.push("/ListClientes")}>Clientes</Button>
         </div>
         <div className="flex flex-col border my-11 p-3 rounded-md">
           <div className="font-semibold">Leituras</div>

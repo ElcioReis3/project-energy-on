@@ -17,15 +17,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Props) => {
   return (
     <div className="w-full">
-      <Link href={"/"}>
-        <Image
-          className="w-max m-auto p-3"
-          src="/assets/images/logomarca.png"
-          width={70}
-          height={70}
-          alt="logomarca"
-        />
-      </Link>
+      <Header visibility={true} />
       <Separator />
       {children}
       <Footer />
