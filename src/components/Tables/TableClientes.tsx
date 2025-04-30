@@ -15,6 +15,7 @@ import { Trash } from "lucide-react";
 import api from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
 import { title } from "process";
+import { DialogConfirm } from "../Dialogs/DialogConfirm";
 
 export const TableClientes = () => {
   const { toast } = useToast();
@@ -67,10 +68,9 @@ export const TableClientes = () => {
               <TableCell>{cliente.count_meter}</TableCell>
               <TableCell>{cliente.meter}</TableCell>
               <TableCell className="text-right">
-                <Trash
-                  className="cursor-pointer"
-                  onClick={() => handleDelete(cliente.id)}
-                />
+                <DialogConfirm handleDelete={() => handleDelete(cliente.id)}>
+                  <Trash className="cursor-pointer" />
+                </DialogConfirm>
               </TableCell>
             </TableRow>
           ))}
