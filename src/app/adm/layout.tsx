@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Props) => {
   return (
     <div className="w-full">
-      <Header visibility={true} />
+      <Header visibility={false} />
       <Separator />
       {children}
       <Footer />

@@ -16,10 +16,12 @@ export const Header = ({ visibility }: Props) => {
   return (
     <header className="w-full">
       <div className="w-full max-w-3xl p-3 flex justify-center m-auto relative">
-        <House
-          className="absolute bottom-3 left-3 cursor-pointer"
-          onClick={() => router.push("/adm/checking")}
-        />
+        {visibility && (
+          <House
+            className="absolute bottom-3 left-3 cursor-pointer"
+            onClick={() => router.push("/adm/checking")}
+          />
+        )}
         <Link href={"/"}>
           <Image
             src="/assets/images/logomarca.png"

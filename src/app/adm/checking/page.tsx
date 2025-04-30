@@ -7,6 +7,7 @@ import { RegisterClient } from "@/components/registerClient";
 import { Button } from "@/components/ui/button";
 import { ReadingDialog } from "@/components/Dialogs/ReadingDialog";
 import { TableAdm } from "@/components/Tables/tableAdm";
+import { TableConsult } from "@/components/Tables/TableConsult";
 
 export default function CheckingPage() {
   const { data: session, status } = useSession();

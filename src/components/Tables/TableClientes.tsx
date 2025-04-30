@@ -37,7 +37,6 @@ export const TableClientes = () => {
   return (
     <div className="w-full overflow-x-auto">
       <Table className="min-w-[900px]">
-        {" "}
         <TableCaption>Lista completa de clientes.</TableCaption>
         <TableHeader>
           <TableRow>

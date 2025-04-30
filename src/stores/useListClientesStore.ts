@@ -23,7 +23,6 @@ export const useListClientesStore = create<ClientesStore>((set) => ({
   fetchClientes: async () => {
     const response = await api.get("/consult-client");
     const data = response.data;
-    console.log(response.data);
     set({ clientes: data.clients });
   },
 }));
