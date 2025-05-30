@@ -21,7 +21,7 @@ export const DialogConfirm = ({ children, handleDelete }: Props) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Deseja realmente deletar esse cliente?</DialogTitle>
-          <DialogDescription>Essa ação não tem volta</DialogDescription>
+          <DialogDescription>Essa ação não tem volta.</DialogDescription>
         </DialogHeader>
         <Button onClick={handleDelete} variant="destructive">
           Deletar
