@@ -53,16 +53,12 @@ export const ConsultDialog = ({ children }: { children: React.ReactNode }) => {
 
   const handleSubmit = async (data: ConsultFormType) => {
     setIsOpen(true);
-    const formattedDate = {
-      ...data,
-      birth: new Date(data.birth).toISOString().replace("Z", "+00:00"),
-    };
 
     try {
       const response = await api.get("/consult-client", {
-        params: formattedDate,
+        params: data,
       });
-      setClientConsult(response.data.client);
+      setClientConsult(response.data.clients);
       setIsOpen(false);
     } catch (error) {
       toast({

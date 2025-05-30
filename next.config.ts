@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       "marketplace-cars.netlify.app/",
       "res.cloudinary.com",
       "res.cloudinary.com/dgysc0sib/image/upload/",
+      "api-energy-on.onrender.com",
     ],
   },
 };

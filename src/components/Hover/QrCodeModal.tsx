@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { formatDateTimeBR } from "@/services/formatDate";
 import { QRCodeCanvas } from "qrcode.react";
+import { Button } from "../ui/button";
 
 export const QrCodeModal = ({ data }: { data: any }) => {
   const qrValue = `
@@ -28,6 +29,7 @@ export const QrCodeModal = ({ data }: { data: any }) => {
       <DialogContent className="flex flex-col items-center">
         <DialogTitle className="sr-only">QR Code da Cobrança</DialogTitle>
         <QRCodeCanvas value={qrValue} size={256} />
+        <Button>Imprimir Boleto</Button>
       </DialogContent>
     </Dialog>
   );
