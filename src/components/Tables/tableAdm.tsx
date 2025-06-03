@@ -31,7 +31,9 @@ export const TableAdm = () => {
         <TableHeader>
           <TableRow className="bg-orange-200 hover:bg-orange-300">
             <TableHead className="max-w-24">Data</TableHead>
-            <TableHead>Número do medidor</TableHead>
+            <TableHead className="w-28 whitespace-nowrap">
+              Número do medidor
+            </TableHead>
             <TableHead>Cliente</TableHead>
             <TableHead>QR Code</TableHead>
           </TableRow>
@@ -45,8 +47,10 @@ export const TableAdm = () => {
               <TableCell>{formatDateTimeBR(cobranca.currentDate)}</TableCell>
 
               <TableCell>{cobranca.meter}</TableCell>
-              <TableCell>{cobranca.name}</TableCell>
-              <TableCell>
+              <TableCell className="w-32 whitespace-nowrap">
+                {cobranca.name}
+              </TableCell>
+              <TableCell className="w-28 whitespace-nowrap">
                 <QrCodeModal data={cobranca} />
               </TableCell>
             </TableRow>
