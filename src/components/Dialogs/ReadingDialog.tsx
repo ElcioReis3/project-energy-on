@@ -89,10 +89,8 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         price: Number(total?.toFixed(2)),
         status: "ABERTO",
       };
-      console.log("Data", data);
 
       const response = await api.post("/create-cobrance", data);
-      console.log("Resposta", response.data.cobrances);
       toast({ title: "Cobrança criada com sucesso!" });
     } catch (err: any) {
       if (err.response && err.response.data) {

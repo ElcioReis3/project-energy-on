@@ -18,7 +18,6 @@ export const TableAdm = () => {
   useEffect(() => {
     const fetchCobrancas = async () => {
       const response = await api.get("/consult-meter");
-      console.log(response.data.cobrances);
       setCobrances(response.data.cobrances);
     };
 

@@ -38,7 +38,6 @@ export const TableConsult = () => {
       const { url } = response.data;
       window.open(url, "_blank");
     } catch (error) {
-      console.error("Erro ao iniciar pagamento:", error);
       toast({ title: "Erro ao iniciar pagamento." });
     }
   };
