@@ -29,13 +29,32 @@ export const QrCodeModal = ({ data }: { data: any }) => {
   const handleGeneratePDF = async () => {
     const input = boletoRef.current;
     if (input) {
-      const canvas = await html2canvas(input, { scale: 2 });
+      const canvas = await html2canvas(input, {
+        scale: 2,
+        backgroundColor: "#fff",
+      });
+
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      const desiredWidth = pageWidth * 0.7;
+      const desiredHeight = (canvas.height * desiredWidth) / canvas.width;
+
+      const marginX = (pageWidth - desiredWidth) / 2;
+      const marginY = (pageHeight - desiredHeight) / 2;
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        marginX,
+        marginY,
+        desiredWidth,
+        desiredHeight
+      );
+
       pdf.save(`boleto_${data.name}.pdf`);
     }
   };
@@ -45,13 +64,14 @@ export const QrCodeModal = ({ data }: { data: any }) => {
       <DialogTrigger asChild>
         <button className="text-blue-600 underline">Ver QR Code</button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col items-center">
+      <DialogContent className="flex flex-col items-center max-w-xl">
         <DialogTitle className="sr-only">QR Code da Cobrança</DialogTitle>
-
-        {/* Área que será capturada no PDF */}
         <div
           ref={boletoRef}
-          className="bg-white p-6 rounded-md shadow-md flex flex-col items-center gap-4 w-full max-w-[600px] border border-gray-300"
+          className="bg-white p-6 rounded-md shadow-md flex flex-col items-center gap-4 w-full max-w-xl border border-gray-300 mx-5"
+          style={{
+            width: "400px",
+          }}
         >
           <h2 className="text-2xl font-bold text-center">
             Boleto de Cobrança de Energia
