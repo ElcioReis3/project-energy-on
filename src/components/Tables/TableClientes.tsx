@@ -36,46 +36,46 @@ export const TableClientes = () => {
   };
 
   return (
-    <div className="w-full overflow-x-auto">
-      <Table className="min-w-[900px]">
-        <TableCaption>Lista completa de clientes.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[200px]">Nome</TableHead>
-            <TableHead>Endereço</TableHead>
-            <TableHead>Telefone</TableHead>
-            <TableHead className="w-40">E-mail</TableHead>
-            <TableHead>CPF</TableHead>
-            <TableHead>Data de Nascimento</TableHead>
-            <TableHead>Última leitura</TableHead>
-            <TableHead>Medidor</TableHead>
-            <TableHead className="text-right">Ações</TableHead>
+    <Table className="w-full overflow-x-auto">
+      <TableCaption>Lista completa de clientes.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-96">Nome</TableHead>
+          <TableHead className="w-52">Endereço</TableHead>
+          <TableHead className="w-32">Telefone</TableHead>
+          <TableHead>E-mail</TableHead>
+          <TableHead>CPF</TableHead>
+          <TableHead>Data de Nascimento</TableHead>
+          <TableHead>Última leitura</TableHead>
+          <TableHead>Medidor</TableHead>
+          <TableHead className="text-right">Ações</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {clientes.map((cliente) => (
+          <TableRow key={cliente.id}>
+            <TableCell className="w-96 whitespace-nowrap p-2">
+              {cliente.name}
+            </TableCell>
+            <TableCell className="w-52 whitespace-nowrap p-2">
+              {cliente.address}
+            </TableCell>
+            <TableCell className="w-32 whitespace-nowrap p-2">
+              {cliente.contact}
+            </TableCell>
+            <TableCell className="max-w-40 truncate">{cliente.email}</TableCell>
+            <TableCell>{cliente.privy}</TableCell>
+            <TableCell>{formatDateTimeBR(cliente.birth)}</TableCell>
+            <TableCell>{cliente.count_meter}</TableCell>
+            <TableCell>{cliente.meter}</TableCell>
+            <TableCell className="text-right">
+              <DialogConfirm handleDelete={() => handleDelete(cliente.id)}>
+                <Trash className="cursor-pointer" />
+              </DialogConfirm>
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {clientes.map((cliente) => (
-            <TableRow key={cliente.id}>
-              <TableCell className="font-medium">{cliente.name}</TableCell>
-              <TableCell className="max-w-40 truncate">
-                {cliente.address}
-              </TableCell>
-              <TableCell>{cliente.contact}</TableCell>
-              <TableCell className="max-w-40 truncate">
-                {cliente.email}
-              </TableCell>
-              <TableCell>{cliente.privy}</TableCell>
-              <TableCell>{formatDateTimeBR(cliente.birth)}</TableCell>
-              <TableCell>{cliente.count_meter}</TableCell>
-              <TableCell>{cliente.meter}</TableCell>
-              <TableCell className="text-right">
-                <DialogConfirm handleDelete={() => handleDelete(cliente.id)}>
-                  <Trash className="cursor-pointer" />
-                </DialogConfirm>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
