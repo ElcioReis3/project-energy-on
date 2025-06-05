@@ -54,13 +54,12 @@ export const ConsultDialog = ({ children }: { children: React.ReactNode }) => {
   const handleSubmit = async (data: ConsultFormType) => {
     setIsOpen(true);
 
-    try {
-      const response = await api.get("/consult-client", {
-        params: data,
-      });
-      setClientConsult(response.data.clients);
-      setIsOpen(false);
-    } catch (error) {
+    const response = await api.get("/consult-client", {
+      params: data,
+    });
+    setClientConsult(response.data.clients);
+    setIsOpen(false);
+    if (!response.data.clients) {
       toast({
         title: "Dados incorretos",
         description: "Corrija os dados e tente novamente.",
