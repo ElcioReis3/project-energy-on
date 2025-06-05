@@ -14,7 +14,6 @@ import { formatDateTimeBR } from "@/services/formatDate";
 import { Trash } from "lucide-react";
 import api from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
-import { title } from "process";
 import { DialogConfirm } from "../Dialogs/DialogConfirm";
 
 export const TableClientes = () => {
