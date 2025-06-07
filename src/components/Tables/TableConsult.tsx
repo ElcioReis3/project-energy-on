@@ -18,9 +18,12 @@ import { useToast } from "@/hooks/use-toast";
 import usePaymentCobranceStore from "@/stores/usePaymentCobrance";
 
 export const TableConsult = () => {
-  const { cobrances, setCobrances } = useCobranceStore();
-  const { payment, setPaymentCobrance } = usePaymentCobranceStore();
-  const { clientConsult } = useConsultStore();
+  const cobrances = useCobranceStore((state) => state.cobrances);
+  const setCobrances = useCobranceStore((state) => state.setCobrances);
+  const setPaymentCobrance = usePaymentCobranceStore(
+    (state) => state.setPaymentCobrance
+  );
+  const clientConsult = useConsultStore((state) => state.clientConsult);
   const { toast } = useToast();
 
   const handlePayment = async (cobranca: CobranceType) => {

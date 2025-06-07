@@ -39,7 +39,7 @@ const consultSchema = z.object({
 type ConsultFormType = z.infer<typeof consultSchema>;
 
 export const ConsultDialog = ({ children }: { children: React.ReactNode }) => {
-  const { setClientConsult } = useConsultStore((state) => state);
+  const setClientConsult = useConsultStore((state) => state.setClientConsult);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 

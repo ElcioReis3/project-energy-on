@@ -9,10 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 import api from "@/services/api";
-import { useClientStore } from "@/stores/useClientStore";
 import { userType } from "@/types/userType";
 import { ManualReadingForm } from "../ManualReadingForm";
 import { useToast } from "@/hooks/use-toast";
+import { useClientStore } from "@/stores/useClientStore";
+import { generateCobrance } from "@/utils/GenerateCobrance";
+import { useCobranceStore } from "@/stores/useCobranceStore";
 // import { CameraReader } from "../CameraReader";
 
 export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
@@ -20,7 +22,10 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [dataAtual, setDataAtual] = useState("");
   const [valorKwh, setValorKwh] = useState("");
   const [total, setTotal] = useState<number | null>(null);
-  const { client, setClient } = useClientStore((state) => state);
+  const client = useClientStore((state) => state.client);
+  const setClient = useClientStore((state) => state.setClient);
+  const cobrances = useCobranceStore((state) => state.cobrances);
+  const setCobrances = useCobranceStore((state) => state.setCobrances);
   const [maturityDate, setMaturityDate] = useState(new Date());
   const [ultimaCobranca, setUltimaCobranca] = useState<Date | null>(null);
   const [error, setError] = useState("");
@@ -48,21 +53,6 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const gerarCobranca = () => {
-    const leituraAtual = parseInt(valorKwh);
-    const leituraAnterior = client?.count_meter ?? 0;
-    const valorUnitario = 0.75;
-
-    if (isNaN(leituraAtual) || leituraAtual < leituraAnterior) {
-      toast({ title: "Verifique a leitura atual inserida." });
-      return;
-    }
-
-    const consumo = leituraAtual - leituraAnterior;
-    const valorTotal = consumo * valorUnitario;
-    setTotal(valorTotal);
-  };
-
   useEffect(() => {
     const hoje = new Date();
     const vencimento = new Date(hoje);
@@ -73,7 +63,11 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const handleCobrance = async () => {
-    gerarCobranca();
+    if (!client) return;
+    const valorTotal = generateCobrance(valorKwh, client?.count_meter);
+    if (valorTotal) {
+      setTotal(valorTotal);
+    }
     if (!client || !valorKwh || total === null) {
       toast({ title: "Preencha os dados corretamente." });
       return;
@@ -91,6 +85,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
       };
 
       const response = await api.post("/create-cobrance", data);
+      setCobrances([...cobrances, response.data]);
       toast({ title: "Cobrança criada com sucesso!" });
     } catch (err: any) {
       if (err.response && err.response.data) {

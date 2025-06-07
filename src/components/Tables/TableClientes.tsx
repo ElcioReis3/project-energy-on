@@ -18,7 +18,8 @@ import { DialogConfirm } from "../Dialogs/DialogConfirm";
 
 export const TableClientes = () => {
   const { toast } = useToast();
-  const { clientes, fetchClientes } = useListClientesStore();
+  const clientes = useListClientesStore((state) => state.clientes);
+  const fetchClientes = useListClientesStore((state) => state.fetchClientes);
 
   useEffect(() => {
     fetchClientes();

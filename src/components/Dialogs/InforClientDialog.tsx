@@ -22,7 +22,7 @@ export const InforClientDialog = ({
   kwh,
   onGerarCobranca,
 }: InforClientDialogProps) => {
-  const { client } = useClientStore((state) => state);
+  const client = useClientStore((state) => state.client);
 
   return (
     <Dialog>

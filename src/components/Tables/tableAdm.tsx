@@ -13,11 +13,13 @@ import { formatDateTimeBR } from "@/services/formatDate";
 import { QrCodeModal } from "../Hover/QrCodeModal";
 
 export const TableAdm = () => {
-  const { cobrances, setCobrances } = useCobranceStore();
+  const cobrances = useCobranceStore((state) => state.cobrances);
+  const setCobrances = useCobranceStore((state) => state.setCobrances);
 
   useEffect(() => {
     const fetchCobrancas = async () => {
       const response = await api.get("/consult-meter");
+      console.log(response.data.cobrances);
       setCobrances(response.data.cobrances);
     };
 
