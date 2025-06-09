@@ -7,12 +7,13 @@ import { Label } from "./ui/label";
 type ManualReadingFormProps = {
   valorKwh: string;
   setValorKwh: (value: string) => void;
-  dataAtual: string;
+  selectDate: string;
   setDataAtual: (value: string) => void;
   numberMeter: string;
   setNumberMeter: (value: string) => void;
   onBuscar: () => void;
   handlecobrance: () => void;
+  onClose?: () => void;
   venciment?: Date;
   total?: number | null;
 };
@@ -20,12 +21,13 @@ type ManualReadingFormProps = {
 export const ManualReadingForm = ({
   valorKwh,
   setValorKwh,
-  dataAtual,
+  selectDate,
   setDataAtual,
   numberMeter,
   setNumberMeter,
   onBuscar,
   handlecobrance,
+  onClose,
 }: ManualReadingFormProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -44,7 +46,7 @@ export const ManualReadingForm = ({
       <Input
         id="dateIn"
         type="date"
-        value={dataAtual}
+        value={selectDate}
         onChange={(e) => setDataAtual(e.target.value)}
       />
       <Label htmlFor="numberIn">Número de série do medidor</Label>
@@ -56,7 +58,11 @@ export const ManualReadingForm = ({
         onChange={(e) => setNumberMeter(e.target.value)}
       />
 
-      <InforClientDialog kwh={valorKwh} onGerarCobranca={handlecobrance}>
+      <InforClientDialog
+        kwh={valorKwh}
+        onGerarCobranca={handlecobrance}
+        onClose={onClose}
+      >
         {valorKwh.length > 5 && numberMeter.length > 2 && (
           <Button className="w-full" onClick={onBuscar}>
             Buscar

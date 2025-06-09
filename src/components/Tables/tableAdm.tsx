@@ -11,6 +11,7 @@ import { useCobranceStore } from "@/stores/useCobranceStore";
 import api from "@/services/api";
 import { formatDateTimeBR } from "@/services/formatDate";
 import { QrCodeModal } from "../Hover/QrCodeModal";
+import { getConsultMeter } from "@/app/api/apisGet";
 
 export const TableAdm = () => {
   const cobrances = useCobranceStore((state) => state.cobrances);
@@ -18,9 +19,8 @@ export const TableAdm = () => {
 
   useEffect(() => {
     const fetchCobrancas = async () => {
-      const response = await api.get("/consult-meter");
-      console.log(response.data.cobrances);
-      setCobrances(response.data.cobrances);
+      const cobrancesData = await getConsultMeter();
+      setCobrances(cobrancesData);
     };
 
     fetchCobrancas();

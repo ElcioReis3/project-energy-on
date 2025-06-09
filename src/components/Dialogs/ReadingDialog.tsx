@@ -8,18 +8,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
-import api from "@/services/api";
-import { userType } from "@/types/userType";
 import { ManualReadingForm } from "../ManualReadingForm";
 import { useToast } from "@/hooks/use-toast";
 import { useClientStore } from "@/stores/useClientStore";
 import { generateCobrance } from "@/utils/GenerateCobrance";
 import { useCobranceStore } from "@/stores/useCobranceStore";
+import { getClient, getConsultMeter } from "@/app/api/apisGet";
+import { PostCreateCobrance } from "@/app/api/apisPost";
+import { getHoursTime } from "@/services/formatDate";
 // import { CameraReader } from "../CameraReader";
 
 export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [numberMeter, setNumberMeter] = useState("");
-  const [dataAtual, setDataAtual] = useState("");
+  const [selectDate, setSelectDate] = useState("");
   const [valorKwh, setValorKwh] = useState("");
   const [total, setTotal] = useState<number | null>(null);
   const client = useClientStore((state) => state.client);
@@ -29,38 +30,23 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   const [maturityDate, setMaturityDate] = useState(new Date());
   const [ultimaCobranca, setUltimaCobranca] = useState<Date | null>(null);
   const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const date = new Date();
+    setSelectDate(date.toISOString().split("T")[0]);
+  }, []);
 
   const handleClient = async () => {
     try {
-      const response = await api.get(`/get-client/?meter=${numberMeter}`);
-      const clientData = response.data.client as userType;
+      // Buscar cliente
+      const clientData = await getClient(numberMeter);
       setClient(clientData);
-
-      // Buscar a cobrança mais recente
-      const cobrancaRes = await api.get("/consult-meter", {
-        params: { meter: clientData.meter },
-      });
-
-      const cobrancas = cobrancaRes.data.cobrances;
-      if (cobrancas.length > 0) {
-        setUltimaCobranca(new Date(cobrancas[0].currentDate));
-      } else {
-        setUltimaCobranca(null);
-      }
     } catch (error) {
       toast({ title: "Número de série do medidor não encontrado" });
     }
   };
-
-  useEffect(() => {
-    const hoje = new Date();
-    const vencimento = new Date(hoje);
-    vencimento.setDate(vencimento.getDate() + 7);
-
-    setDataAtual(hoje.toISOString().split("T")[0]);
-    setMaturityDate(vencimento);
-  }, []);
 
   const handleCobrance = async () => {
     if (!client) return;
@@ -72,21 +58,21 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
       toast({ title: "Preencha os dados corretamente." });
       return;
     }
-
     try {
+      const DateTimeHours = getHoursTime(selectDate);
+
       const data = {
-        name: client.name,
-        count_meter: parseInt(valorKwh),
-        meter: client.meter,
-        currentDate: new Date(dataAtual),
-        maturityDate: maturityDate,
-        price: Number(total?.toFixed(2)),
-        status: "ABERTO",
+        client,
+        valorKwh: Number(valorKwh),
+        currentDate: DateTimeHours,
+        maturityDate,
+        total,
       };
 
-      const response = await api.post("/create-cobrance", data);
-      setCobrances([...cobrances, response.data]);
+      const createCobranceData = await PostCreateCobrance(data);
+      setCobrances([...cobrances, createCobranceData]);
       toast({ title: "Cobrança criada com sucesso!" });
+      setOpen(false);
     } catch (err: any) {
       if (err.response && err.response.data) {
         setError(err.response.data.message);
@@ -104,7 +90,7 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -121,12 +107,13 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         <ManualReadingForm
           valorKwh={valorKwh}
           setValorKwh={setValorKwh}
-          dataAtual={dataAtual}
-          setDataAtual={setDataAtual}
+          selectDate={selectDate}
+          setDataAtual={setSelectDate}
           numberMeter={numberMeter}
           setNumberMeter={setNumberMeter}
           onBuscar={handleClient}
           handlecobrance={handleCobrance}
+          onClose={() => setOpen(false)}
           venciment={maturityDate}
           total={total}
         />

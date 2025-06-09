@@ -10,3 +10,13 @@ export const formatDateTimeBR = (date: string | Date) => {
 
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
+
+export const getHoursTime = (dataAtual: string) => {
+  const now = new Date();
+  const hour = now.getHours().toString().padStart(2, "0");
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+  const secunds = now.getSeconds().toString().padStart(2, "0");
+
+  const DatetimeHours = new Date(`${dataAtual}T${hour}:${minutes}:${secunds}`);
+  return DatetimeHours;
+};

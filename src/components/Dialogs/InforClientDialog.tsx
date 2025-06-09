@@ -10,9 +10,11 @@ import {
 import { useClientStore } from "@/stores/useClientStore";
 import { Button } from "../ui/button";
 import { maskPrivy } from "@/services/maskPrivy";
+import { useState } from "react";
 
 type InforClientDialogProps = {
   onGerarCobranca?: () => void;
+  onClose?: () => void;
   kwh: string;
   children: React.ReactNode;
 };
@@ -21,11 +23,21 @@ export const InforClientDialog = ({
   children,
   kwh,
   onGerarCobranca,
+  onClose,
 }: InforClientDialogProps) => {
   const client = useClientStore((state) => state.client);
+  const [open, setOpen] = useState(false);
+
+  const handleCloseAndGenerate = async () => {
+    if (onGerarCobranca) {
+      await onGerarCobranca();
+      setOpen(false);
+      onClose?.();
+    }
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="w-full" asChild>
         {children}
       </DialogTrigger>
