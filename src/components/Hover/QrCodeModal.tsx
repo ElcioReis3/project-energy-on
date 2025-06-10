@@ -4,14 +4,19 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { formatDateTimeBR } from "@/services/formatDate";
+import { formatDateTime } from "@/services/formatDate";
 import { QRCodeCanvas } from "qrcode.react";
 import { Button } from "../ui/button";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useRef } from "react";
+import { CobranceType } from "@/types/cobranceType";
 
-export const QrCodeModal = ({ data }: { data: any }) => {
+type Props = {
+  data: CobranceType;
+};
+
+export const QrCodeModal = ({ data }: Props) => {
   const qrValue = `
 🔐 Cobrança de Energia
 
@@ -19,8 +24,8 @@ export const QrCodeModal = ({ data }: { data: any }) => {
 🔢 Medidor: ${data.meter}
 ⚡ Consumo: ${data.count_meter} kWh
 💰 Valor: R$ ${data.price.toFixed(2)}
-📅 Gerado em: ${formatDateTimeBR(data.currentDate)}
-📆 Vencimento: ${formatDateTimeBR(data.maturityDate)}
+📅 Gerado em: ${formatDateTime(data.currentDate)}
+📆 Vencimento: ${formatDateTime(data.maturityDate)}
 📌 Status: ${data.status}
 `;
 
@@ -91,6 +96,10 @@ export const QrCodeModal = ({ data }: { data: any }) => {
                 <strong>Consumo:</strong> {data.count_meter} kWh
               </p>
               <p>
+                <strong>Validade:</strong>
+                {formatDateTime(data.maturityDate)}
+              </p>
+              <p className="p-2 rounded-md border">
                 <strong>Valor:</strong> R$ {data.price.toFixed(2)}
               </p>
             </div>
@@ -99,7 +108,15 @@ export const QrCodeModal = ({ data }: { data: any }) => {
           <div className="w-full border-t border-gray-300 my-4"></div>
 
           <div className="w-full text-center">
-            <p className="mb-2">
+            <p
+              className={`text-center font-semibold mb-2 ${
+                data.status === "ABERTO"
+                  ? "text-green-500"
+                  : data.status === "VENCIDO"
+                  ? "text-red-500"
+                  : "text-gray-700"
+              }`}
+            >
               <strong>Status:</strong> {data.status}
             </p>
             <div className="w-max m-auto">

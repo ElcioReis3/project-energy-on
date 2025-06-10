@@ -36,7 +36,12 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const date = new Date();
     setSelectDate(date.toISOString().split("T")[0]);
-  }, []);
+    if (selectDate) {
+      const date = new Date(selectDate);
+      date.setDate(date.getDate() + 7);
+      setMaturityDate(date);
+    }
+  }, [selectDate]);
 
   const handleClient = async () => {
     try {
@@ -68,7 +73,6 @@ export const ReadingDialog = ({ children }: { children: React.ReactNode }) => {
         maturityDate,
         total,
       };
-
       const createCobranceData = await PostCreateCobrance(data);
       setCobrances([...cobrances, createCobranceData]);
       toast({ title: "Cobrança criada com sucesso!" });

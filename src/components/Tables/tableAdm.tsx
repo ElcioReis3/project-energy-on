@@ -8,10 +8,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCobranceStore } from "@/stores/useCobranceStore";
-import api from "@/services/api";
-import { formatDateTimeBR } from "@/services/formatDate";
 import { QrCodeModal } from "../Hover/QrCodeModal";
 import { getConsultMeter } from "@/app/api/apisGet";
+import { formatDateTime } from "@/services/formatDate";
 
 export const TableAdm = () => {
   const cobrances = useCobranceStore((state) => state.cobrances);
@@ -45,8 +44,7 @@ export const TableAdm = () => {
               key={cobranca.id}
               className="bg-orange-50 hover:bg-orange-100"
             >
-              <TableCell>{formatDateTimeBR(cobranca.currentDate)}</TableCell>
-
+              <TableCell>{formatDateTime(cobranca.currentDate)}</TableCell>
               <TableCell>{cobranca.meter}</TableCell>
               <TableCell className="w-32 whitespace-nowrap">
                 {cobranca.name}

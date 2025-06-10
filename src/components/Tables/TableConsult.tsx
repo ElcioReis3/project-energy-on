@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { CobranceType } from "@/types/cobranceType";
 import { useToast } from "@/hooks/use-toast";
 import usePaymentCobranceStore from "@/stores/usePaymentCobrance";
+import { formatDateTime } from "@/services/formatDate";
 
 export const TableConsult = () => {
   const cobrances = useCobranceStore((state) => state.cobrances);
@@ -92,9 +93,7 @@ export const TableConsult = () => {
               })}
             </TableCell>
             <TableCell>R$ {Number(cobranca.price).toFixed(2)}</TableCell>
-            <TableCell>
-              {new Date(cobranca.maturityDate).toLocaleDateString("pt-BR")}
-            </TableCell>
+            <TableCell>{formatDateTime(cobranca.maturityDate)}</TableCell>
             <TableCell
               className={`text-right font-semibold ${
                 cobranca.status === "ABERTO"

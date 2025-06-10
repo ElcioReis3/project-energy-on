@@ -19,7 +19,7 @@ export const PostCreateCobrance = async (data: Data) => {
     count_meter: Number(data.valorKwh),
     meter: data.client.meter,
     currentDate: data.currentDate,
-    maturityDate: data.maturityDate,
+    maturityDate: dateMaturity,
     price: Number(data.total?.toFixed(2)),
     status: "ABERTO",
   };

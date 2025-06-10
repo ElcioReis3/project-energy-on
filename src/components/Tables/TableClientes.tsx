@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useListClientesStore } from "@/stores/useListClientesStore";
-import { formatDateTimeBR } from "@/services/formatDate";
+import { formatDate } from "@/services/formatDate";
 import { Trash } from "lucide-react";
 import api from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
@@ -65,7 +65,7 @@ export const TableClientes = () => {
             </TableCell>
             <TableCell className="max-w-40 truncate">{cliente.email}</TableCell>
             <TableCell>{cliente.privy}</TableCell>
-            <TableCell>{formatDateTimeBR(cliente.birth)}</TableCell>
+            <TableCell>{formatDate(cliente.birth)}</TableCell>
             <TableCell>{cliente.count_meter}</TableCell>
             <TableCell>{cliente.meter}</TableCell>
             <TableCell className="text-right">
