@@ -10,7 +10,7 @@ type Cliente = {
   privy: string;
   birth: string;
   meter: string;
-  count_meter: number;
+  count_meter: number[];
 };
 
 type ClientesStore = {

@@ -7,5 +7,5 @@ export type userType = {
   privy: string;
   birth: string;
   meter: string;
-  count_meter: number;
+  count_meter: number[];
 };

@@ -30,7 +30,7 @@ export const TableAdm = () => {
       <Table>
         <TableHeader>
           <TableRow className="bg-orange-200 hover:bg-orange-300">
-            <TableHead className="max-w-24">Data</TableHead>
+            <TableHead className="max-w-20">Data</TableHead>
             <TableHead className="w-28 whitespace-nowrap">
               Número do medidor
             </TableHead>
@@ -44,7 +44,9 @@ export const TableAdm = () => {
               key={cobranca.id}
               className="bg-orange-50 hover:bg-orange-100"
             >
-              <TableCell>{formatDateTime(cobranca.currentDate)}</TableCell>
+              <TableCell className="max-w-20">
+                {formatDateTime(cobranca.currentDate)}
+              </TableCell>
               <TableCell>{cobranca.meter}</TableCell>
               <TableCell className="w-32 whitespace-nowrap">
                 {cobranca.name}

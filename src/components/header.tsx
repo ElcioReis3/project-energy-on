@@ -1,11 +1,10 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { ConsultDialog } from "./Dialogs/ConsultDialog";
 import { House } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { LogoMarca } from "./Logo";
 
 type Props = {
   visibility: boolean;
@@ -22,14 +21,7 @@ export const Header = ({ visibility }: Props) => {
             onClick={() => router.push("/adm/checking")}
           />
         )}
-        <Link href={"/"}>
-          <Image
-            src="/assets/images/logomarca.png"
-            width={130}
-            height={130}
-            alt="logomarca"
-          />
-        </Link>
+        <LogoMarca />
         {visibility && (
           <ConsultDialog>
             <span className="absolute bottom-3 right-3">
