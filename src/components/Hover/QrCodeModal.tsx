@@ -62,10 +62,10 @@ export const QrCodeModal = ({ data }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="text-blue-600 underline">Ver QR Code</button>
+        <button className="text-blue-600 underline">Ver comprovante</button>
       </DialogTrigger>
       <DialogContent className="w-full h-full flex flex-col items-center overflow-scroll xs:max-w-full md:max-w-4xl">
-        <DialogTitle className="sr-only">QR Code da Cobrança</DialogTitle>
+        <DialogTitle className="sr-only">Comprovante de Cobrança</DialogTitle>
 
         <LayoutPayment data={data} refDiv={boletoRef} />
         <Button onClick={handleGeneratePDF}>Imprimir Boleto</Button>

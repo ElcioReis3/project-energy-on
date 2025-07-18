@@ -8,6 +8,7 @@ import { useClientStore } from "@/stores/useClientStore";
 import { getClient } from "@/app/api/apisGet";
 import { useEffect } from "react";
 import { maskPrivy } from "@/services/maskPrivy";
+import Barcode from "react-barcode";
 
 type Props = {
   data: CobranceType;
@@ -137,12 +138,23 @@ export const LayoutPayment = ({ data, refDiv }: Props) => {
             <div>R$ {data.price.toFixed(2)}</div>
           </div>
         </div>
+
         <Separator className="w-full" />
         <div className="w-full border mt-2">
           <div className="border p-1">Reaviso de Vencimento</div>
           <div className="w-full h-20 border"></div>
         </div>
         <div className="w-full border mt-2 h-20"></div>
+        <Separator className="w-full" />
+        <div className="w-full mt-4 flex justify-center">
+          <Barcode
+            value={`${data.meter}-${formatDate(data.maturityDate)}`}
+            format="CODE128"
+            height={60}
+            width={2.3}
+            displayValue={false}
+          />
+        </div>
       </div>
     </>
   );

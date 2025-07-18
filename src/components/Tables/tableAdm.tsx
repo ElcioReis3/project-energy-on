@@ -35,7 +35,7 @@ export const TableAdm = () => {
               Número do medidor
             </TableHead>
             <TableHead>Cliente</TableHead>
-            <TableHead>QR Code</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="w-full">

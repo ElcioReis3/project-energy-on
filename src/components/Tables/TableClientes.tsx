@@ -66,7 +66,9 @@ export const TableClientes = () => {
             <TableCell className="max-w-40 truncate">{cliente.email}</TableCell>
             <TableCell>{cliente.privy}</TableCell>
             <TableCell>{formatDate(cliente.birth)}</TableCell>
-            <TableCell>{cliente.count_meter}</TableCell>
+            <TableCell>
+              {cliente.count_meter[cliente.count_meter.length - 1]}
+            </TableCell>
             <TableCell>{cliente.meter}</TableCell>
             <TableCell className="text-right">
               <DialogConfirm handleDelete={() => handleDelete(cliente.id)}>
